@@ -10,5 +10,7 @@
        </tr>
      </thead>
    </table>
-   <button type="button" class="btn btn-primary" id="bt_randomize">Randomize</button>
+   <button type="button" class="btn btn-primary" id="bt_randomize">
+     <span id="spinner" class="glyphicon glyphicon-refresh"></span> Randomize
+   </button>
 </div>
