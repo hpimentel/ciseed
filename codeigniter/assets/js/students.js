@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    /**
+     * Populates the table by calling for the students information
+     */
     $.getJSON("http://localhost/Sokikom/api/getStudents", function(jd) {
         var $tbody = $("#studentsTable");
         
@@ -14,11 +17,18 @@ $(document).ready(function() {
         });
     });
     
+    /**
+     * Gets random user information from the random user api.
+     * Updates every row with the new information and sends the data
+     * to the server to update the database
+     */
     $("#bt_randomize").click(function() {
-        var newData = [];
-        var users = [];
+        $(this).prop("disabled",true);
+        $("#spinner").addClass("spinning");
+        var newData = []; // WIll contain all the new data to save
+        var users = []; // to save the random user info
         var rowCount = $("#studentsTable > tbody > tr").length;
-        var promises = [];
+        var promises = []; // Store every ajax call to random users
         for(var i = 0; i < rowCount; i++) {
             var request = $.ajax({
                 url: 'http://api.randomuser.me/',
@@ -30,7 +40,8 @@ $(document).ready(function() {
             });
             promises.push(request);
         }
-        
+         
+        // wait for every ajax call to finish and updates the table
         $.when.apply(null, promises).done(function(){
             var rowCount = 0;
             $("#studentsTable > tbody > tr").each(function() {
@@ -57,6 +68,11 @@ $(document).ready(function() {
             });
             var newUsersJSON = JSON.stringify(newData);
             
+            // This should be done after the next api call
+            $("#spinner").removeClass("spinning");
+            $("#bt_randomize").prop("disabled", false);
+            
+            // update the database
             $.ajax({
                type: "POST",
                 url: "http://localhost/Sokikom/api/updateStudents",
